@@ -1,11 +1,11 @@
 #include <iostream>
-#include "net/port_checker/PortChecker.h"
+#include "net/port_scanner/PortScanner.h"
 #include "base/Exception.h"
 
 int main()
 {
 	try {
-		auto pc = PortChecker();
+		auto pc = PortScanner();
 
 		auto portsOpen = pc.scanAddress(L"google.com");
 

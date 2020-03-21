@@ -20,16 +20,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\base\Exception.h" />
-    <ClInclude Include="src\net\port_checker\misc\PortCheckerException.h" />
-    <ClInclude Include="src\net\port_checker\PortChecker.h" />
+    <ClInclude Include="src\net\port_scanner\misc\PortScannerException.h" />
+    <ClInclude Include="src\net\port_scanner\PortScanner.h" />
     <ClInclude Include="src\net\socket\misc\SocketException.h" />
     <ClInclude Include="src\net\socket\Socket.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base\Exception.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\net\port_checker\misc\PortCheckerException.cpp" />
-    <ClCompile Include="src\net\port_checker\PortChecker.cpp" />
+    <ClCompile Include="src\net\port_scanner\misc\PortScannerException.cpp" />
+    <ClCompile Include="src\net\port_scanner\PortScanner.cpp" />
     <ClCompile Include="src\net\socket\misc\SocketException.cpp" />
     <ClCompile Include="src\net\socket\Socket.cpp" />
   </ItemGroup>
@@ -38,6 +38,7 @@
     <ProjectGuid>{48AC6E62-91D0-49D0-B853-0DCCE40B1EBB}</ProjectGuid>
     <RootNamespace>PortChecker</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PortScanner</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

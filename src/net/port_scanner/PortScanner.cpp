@@ -1,13 +1,12 @@
-#include "PortChecker.h"
-#include "misc/PortCheckerException.h"
+#include "PortScanner.h"
+#include "misc/PortScannerException.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <comdef.h>
 #include <string>
 #include <vector>
 
-
-PortChecker::PortChecker()
+PortScanner::PortScanner()
 {
 	using namespace std::literals::string_literals;
 
@@ -15,7 +14,7 @@ PortChecker::PortChecker()
 
 	if (auto startupCode = WSAStartup(MAKEWORD(2, 2), &wsaData); startupCode != 0)
 	{
-		throw PortCheckerException() << L"Failed to startup WSA...";
+		throw PortScannerException() << L"Failed to startup WSA...";
 	}
 
 	this->hints = {0};
@@ -24,12 +23,12 @@ PortChecker::PortChecker()
 	this->hints.ai_protocol = IPPROTO_TCP;
 }
 
-PortChecker::~PortChecker()
+PortScanner::~PortScanner()
 {
 	WSACleanup();
 }
 
-std::vector<bool> PortChecker::scanAddress(std::wstring address)
+std::vector<bool> PortScanner::scanAddress(std::wstring address)
 {
 	std::vector<bool> success(1024, false);
 	for (int i = 0; i < 1024; i++)
@@ -38,7 +37,7 @@ std::vector<bool> PortChecker::scanAddress(std::wstring address)
 			Socket socket = createConnection(address, i);
 			success[i] = socket;
 		}
-		catch (PortCheckerException& ) {
+		catch (PortScannerException& ) {
 			success[i] = false;
 		}
 	}
@@ -46,7 +45,7 @@ std::vector<bool> PortChecker::scanAddress(std::wstring address)
 	return success;
 }
 
-Socket PortChecker::createConnection(std::wstring address, int port)
+Socket PortScanner::createConnection(std::wstring address, int port)
 {
 	_bstr_t bAddr(address.c_str());
 	const char* pAddress = bAddr;
@@ -57,14 +56,14 @@ Socket PortChecker::createConnection(std::wstring address, int port)
 
 	if (auto status = getaddrinfo(pAddress, pPort, &this->hints, &result); status != 0)
 	{
-		throw PortCheckerException() << L"Failed to resolve {" << address << L"}...";
+		throw PortScannerException() << L"Failed to resolve {" << address << L"}...";
 	}
 
 	Socket socket{*result};
 
 	if (auto socketConnectStatus = connect(socket, result->ai_addr, result->ai_addrlen); socketConnectStatus == SOCKET_ERROR)
 	{
-		throw PortCheckerException() << L"Failed to connect to {" << address << L"}!";
+		throw PortScannerException() << L"Failed to connect to {" << address << L"}!";
 	}
 
 	return socket;

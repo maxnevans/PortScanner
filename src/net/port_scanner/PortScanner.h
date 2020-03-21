@@ -5,11 +5,11 @@
 #include <vector>
 #include "../socket/Socket.h"
 
-class PortChecker
+class PortScanner
 {
 public:
-	PortChecker();
-	~PortChecker();
+	PortScanner();
+	~PortScanner();
 	std::vector<bool> scanAddress(std::wstring address);
 
 private:
