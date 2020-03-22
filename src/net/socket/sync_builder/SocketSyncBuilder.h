@@ -6,6 +6,11 @@
 #include <memory>
 #include <windows.h>
 
+/*  Description:
+		Used to create SocketSync objects, save their common state, save necessary resourses
+		for thier parallel execution. Saves results of their execution as well.
+*/
+
 class SocketSyncBuilder
 {
 	friend class SocketSync;

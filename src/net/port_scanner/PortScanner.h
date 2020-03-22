@@ -6,6 +6,10 @@
 #include "../socket/Socket.h"
 #include <memory>
 
+/*  Description:
+		Main application class. Use to scan for ports.
+*/
+
 class PortScanner
 {
 public:

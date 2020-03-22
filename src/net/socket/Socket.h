@@ -2,6 +2,10 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
+/*  Description:
+		Represents socket entity, encapsulates winapi SOCKET and some operations that can be made on it.
+*/
+
 class Socket
 {
 public:

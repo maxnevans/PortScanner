@@ -5,6 +5,10 @@
 
 class SocketSyncBuilder;
 
+/*  Description:
+		Binds content necessary for parallel execution to Socket object.
+*/
+
 class SocketSync
 {
 public:
