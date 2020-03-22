@@ -8,11 +8,11 @@ class SocketSyncBuilder;
 class SocketSync
 {
 public:
-	SocketSync(std::shared_ptr<SocketSyncBuilder> builder, std::shared_ptr<Socket> socket, size_t index);
+	SocketSync(SocketSyncBuilder& builder, std::shared_ptr<Socket> socket, size_t index);
 	void execute();
 
 private:
-	std::shared_ptr<SocketSyncBuilder> builder;
+	SocketSyncBuilder& builder;
 	std::shared_ptr<Socket> socket;
 	size_t index;
 };

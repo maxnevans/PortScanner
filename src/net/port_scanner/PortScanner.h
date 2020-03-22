@@ -12,12 +12,16 @@ public:
 	PortScanner();
 	~PortScanner();
 	std::vector<bool> scanAddress(std::wstring address);
+	std::vector<bool> scanAddress(std::wstring address, int startPort, int endPort);
 
 private:
-	std::shared_ptr<Socket> createSocket(std::wstring address, int port);
-	static DWORD __stdcall portConnectionThreadProcedure(LPVOID context);
+	std::unique_ptr<Socket> createSocket(std::wstring address, int port);
 
 private:
+	static constexpr size_t START_PORT = 0;
+	static constexpr size_t END_PORT = 1024;
+	static constexpr size_t COUNT_PORTS = END_PORT - START_PORT;
+
 	addrinfo hints;
 };
 

@@ -1,6 +1,6 @@
 #include "SocketSync.h"
 
-SocketSync::SocketSync(std::shared_ptr<SocketSyncBuilder> builder, std::shared_ptr<Socket> socket, size_t index)
+SocketSync::SocketSync(SocketSyncBuilder& builder, std::shared_ptr<Socket> socket, size_t index)
 	:
 	socket(socket),
 	builder(builder),
@@ -12,5 +12,5 @@ void SocketSync::execute()
 {
 	bool success = socket->connect();
 
-	builder->sync(success, index);
+	builder.sync(success, index);
 }

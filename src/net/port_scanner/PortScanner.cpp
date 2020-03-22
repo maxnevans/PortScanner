@@ -31,21 +31,21 @@ PortScanner::~PortScanner()
 
 std::vector<bool> PortScanner::scanAddress(std::wstring address)
 {
-	SocketSyncBuilder builder{ 2 };
+	return scanAddress(address, START_PORT, END_PORT);
+}
 
-	for (size_t i = 0; i < 2; i++)
+std::vector<bool> PortScanner::scanAddress(std::wstring address, int startPort, int endPort)
+{
+	const int countPorts = endPort - startPort;
+	auto builder = SocketSyncBuilder{ countPorts };
+
+	for (size_t i = startPort; i < endPort; i++)
 	{
 		try {
 			auto socket = createSocket(address, i);
-			auto syncSocket = builder.createSync(socket, i);
+			auto syncSocket = builder.createSync(std::move(socket), i);
 
-			// To pass shared_ptr to another process
-			auto* pSyncSocket = new std::shared_ptr<SocketSync>(syncSocket);
-
-			if (QueueUserWorkItem(PortScanner::portConnectionThreadProcedure, pSyncSocket, WT_EXECUTELONGFUNCTION) == FALSE)
-			{
-				throw PortScannerException() << L"Failed to queue user work item!";
-			}
+			builder.start(std::move(syncSocket));
 		}
 		catch (PortScannerException& ) {
 			builder.setResult(false, i);
@@ -56,7 +56,7 @@ std::vector<bool> PortScanner::scanAddress(std::wstring address)
 	return builder.getResults();
 }
 
-std::shared_ptr<Socket> PortScanner::createSocket(std::wstring address, int port)
+std::unique_ptr<Socket> PortScanner::createSocket(std::wstring address, int port)
 {
 	_bstr_t bAddr(address.c_str());
 	const char* pAddress = bAddr;
@@ -70,19 +70,5 @@ std::shared_ptr<Socket> PortScanner::createSocket(std::wstring address, int port
 		throw PortScannerException() << L"Failed to resolve {" << address << L"}...";
 	}
 
-	return std::shared_ptr<Socket>{ new Socket{ *result } };
-}
-
-DWORD __stdcall PortScanner::portConnectionThreadProcedure(LPVOID context)
-{
-	// Safe shared ptr to socketSync
-	auto pSocketSync = reinterpret_cast<std::shared_ptr<SocketSync>*>(context);
-	std::shared_ptr<SocketSync> socketSync = *pSocketSync;
-	delete pSocketSync;
-	pSocketSync = nullptr;
-	context = nullptr;
-
-	socketSync->execute();
-
-	return 0;
+	return std::unique_ptr<Socket>{ new Socket{ *result } };
 }
