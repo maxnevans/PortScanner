@@ -8,8 +8,8 @@ public:
 	Exception(std::wstring message);
 	Exception(const Exception&);
 	Exception& operator=(const Exception&);
-	Exception(Exception&&);
-	Exception& operator=(Exception&&);
+	Exception(Exception&&) noexcept;
+	Exception& operator=(Exception&&) noexcept;
 	Exception& operator<<(std::wstring messagePart);
 	virtual std::wstring what();
 

@@ -7,7 +7,7 @@ int main()
 	try {
 		auto pc = PortScanner();
 
-		auto portsOpen = pc.scanAddress(L"google.com");
+		auto portsOpen = pc.scanAddress(L"yandex.by");
 
 		for (size_t i = 0; i < portsOpen.size(); i++)
 		{

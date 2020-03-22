@@ -18,12 +18,12 @@ Exception& Exception::operator=(const Exception& copy)
 	return *this;
 }
 
-Exception::Exception(Exception&& move)
+Exception::Exception(Exception&& move) noexcept
 {
 	this->messageStream << std::move(move.messageStream.str());
 }
 
-Exception& Exception::operator=(Exception&& move)
+Exception& Exception::operator=(Exception&& move) noexcept
 {
 	this->messageStream << std::move(move.messageStream.str());
 	return *this;

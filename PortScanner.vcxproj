@@ -24,6 +24,9 @@
     <ClInclude Include="src\net\port_scanner\PortScanner.h" />
     <ClInclude Include="src\net\socket\misc\SocketException.h" />
     <ClInclude Include="src\net\socket\Socket.h" />
+    <ClInclude Include="src\net\socket\sync_builder\misc\SocketSyncBuilderException.h" />
+    <ClInclude Include="src\net\socket\sync_builder\SocketSyncBuilder.h" />
+    <ClInclude Include="src\net\socket\sync_builder\sync\SocketSync.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\base\Exception.cpp" />
@@ -32,6 +35,9 @@
     <ClCompile Include="src\net\port_scanner\PortScanner.cpp" />
     <ClCompile Include="src\net\socket\misc\SocketException.cpp" />
     <ClCompile Include="src\net\socket\Socket.cpp" />
+    <ClCompile Include="src\net\socket\sync_builder\misc\SocketSyncBuilderException.cpp" />
+    <ClCompile Include="src\net\socket\sync_builder\SocketSyncBuilder.cpp" />
+    <ClCompile Include="src\net\socket\sync_builder\sync\SocketSync.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

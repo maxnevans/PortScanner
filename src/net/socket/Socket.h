@@ -8,14 +8,16 @@ public:
 	Socket(addrinfo initData);
 	Socket(const Socket&) = delete;
 	Socket& operator=(const Socket&) = delete;
-	Socket(Socket&&);
-	Socket& operator=(Socket&&);
+	Socket(Socket&&) noexcept;
+	Socket& operator=(Socket&&) noexcept;
 	~Socket();
 	operator SOCKET();
 	explicit operator bool();
 	bool operator!();
+	bool connect();
 
 private:
 	SOCKET sock;
+	addrinfo bindedAddress;
 };
 

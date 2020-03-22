@@ -4,6 +4,7 @@
 #include <ws2tcpip.h>
 #include <vector>
 #include "../socket/Socket.h"
+#include <memory>
 
 class PortScanner
 {
@@ -13,7 +14,8 @@ public:
 	std::vector<bool> scanAddress(std::wstring address);
 
 private:
-	Socket createConnection(std::wstring address, int port);
+	std::shared_ptr<Socket> createSocket(std::wstring address, int port);
+	static DWORD __stdcall portConnectionThreadProcedure(LPVOID context);
 
 private:
 	addrinfo hints;

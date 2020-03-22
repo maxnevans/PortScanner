@@ -5,6 +5,7 @@
 #include <comdef.h>
 #include <string>
 #include <vector>
+#include "../socket/sync_builder/SocketSyncBuilder.h"
 
 PortScanner::PortScanner()
 {
@@ -30,22 +31,32 @@ PortScanner::~PortScanner()
 
 std::vector<bool> PortScanner::scanAddress(std::wstring address)
 {
-	std::vector<bool> success(1024, false);
-	for (int i = 0; i < 1024; i++)
+	SocketSyncBuilder builder{ 2 };
+
+	for (size_t i = 0; i < 2; i++)
 	{
 		try {
-			Socket socket = createConnection(address, i);
-			success[i] = socket;
+			auto socket = createSocket(address, i);
+			auto syncSocket = builder.createSync(socket, i);
+
+			// To pass shared_ptr to another process
+			auto* pSyncSocket = new std::shared_ptr<SocketSync>(syncSocket);
+
+			if (QueueUserWorkItem(PortScanner::portConnectionThreadProcedure, pSyncSocket, WT_EXECUTELONGFUNCTION) == FALSE)
+			{
+				throw PortScannerException() << L"Failed to queue user work item!";
+			}
 		}
 		catch (PortScannerException& ) {
-			success[i] = false;
+			builder.setResult(false, i);
+			throw;
 		}
 	}
 
-	return success;
+	return builder.getResults();
 }
 
-Socket PortScanner::createConnection(std::wstring address, int port)
+std::shared_ptr<Socket> PortScanner::createSocket(std::wstring address, int port)
 {
 	_bstr_t bAddr(address.c_str());
 	const char* pAddress = bAddr;
@@ -59,12 +70,19 @@ Socket PortScanner::createConnection(std::wstring address, int port)
 		throw PortScannerException() << L"Failed to resolve {" << address << L"}...";
 	}
 
-	Socket socket{*result};
+	return std::shared_ptr<Socket>{ new Socket{ *result } };
+}
 
-	if (auto socketConnectStatus = connect(socket, result->ai_addr, result->ai_addrlen); socketConnectStatus == SOCKET_ERROR)
-	{
-		throw PortScannerException() << L"Failed to connect to {" << address << L"}!";
-	}
+DWORD __stdcall PortScanner::portConnectionThreadProcedure(LPVOID context)
+{
+	// Safe shared ptr to socketSync
+	auto pSocketSync = reinterpret_cast<std::shared_ptr<SocketSync>*>(context);
+	std::shared_ptr<SocketSync> socketSync = *pSocketSync;
+	delete pSocketSync;
+	pSocketSync = nullptr;
+	context = nullptr;
 
-	return socket;
+	socketSync->execute();
+
+	return 0;
 }
